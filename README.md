@@ -29,8 +29,11 @@ TaskFlow is a production-ready task management system that enables users to orga
 <!-- Replace with your actual screenshots -->
 <div align="center">
   
-### Dashboard View
-![Dashboard with Tasks](https://raw.githubusercontent.com/vickysingh009/todo-app/033f2a45191a90c509c85ce36fbccfd9b44ce4ab/Screenshot%202026-01-30%20135417.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/vickysingh009/todo-app/e19eb3629c070369ce77f200cc91daf7236eca3a/login.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/vickysingh009/todo-app/033f2a45191a90c509c85ce36fbccfd9b44ce4ab/Screenshot%202026-01-30%20135417.png" width="45%" />
+</p>
+
 
 
 ### 📱 Mobile Experience
