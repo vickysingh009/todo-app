@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaPen } from 'react-icons/fa';
 import ConfirmationModal from './ConfirmationModal';
 
 const BoardList = ({ selectedBoardId, onSelectBoard }) => {
@@ -8,6 +8,9 @@ const BoardList = ({ selectedBoardId, onSelectBoard }) => {
     const [newBoardName, setNewBoardName] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [editingBoardId, setEditingBoardId] = useState(null);
+    const [editName, setEditName] = useState('');
+    const [editError, setEditError] = useState('');
     const [deleteModal, setDeleteModal] = useState({ open: false, id: null });
 
     useEffect(() => {
@@ -34,10 +37,47 @@ const BoardList = ({ selectedBoardId, onSelectBoard }) => {
             const res = await api.post('/boards', { name: newBoardName });
             setBoards([res.data.data, ...boards]);
             setNewBoardName('');
-            onSelectBoard(res.data.data._id);
+            onSelectBoard(res.data.data);
         } catch (err) {
             alert(err.response?.data?.error || 'Failed to create board');
         }
+    };
+
+    const startEditing = (board) => {
+        setEditingBoardId(board._id);
+        setEditName(board.name);
+        setEditError('');
+    };
+
+    const handleEditChange = (e) => {
+        setEditName(e.target.value);
+        if (e.target.value.trim().length < 3) {
+            setEditError('Min 3 chars');
+        } else {
+            setEditError('');
+        }
+    };
+
+    const saveEditing = async () => {
+        if (!editName.trim() || editName.trim().length < 3) {
+            setEditError('Min 3 chars');
+            return;
+        }
+
+        try {
+            await api.put(`/boards/${editingBoardId}`, { name: editName });
+            setBoards(boards.map(b => b._id === editingBoardId ? { ...b, name: editName } : b));
+            setEditingBoardId(null);
+            setEditError('');
+        } catch (err) {
+            setEditError('Failed to save');
+        }
+    };
+
+    const cancelEditing = () => {
+        setEditingBoardId(null);
+        setEditName('');
+        setEditError('');
     };
 
     const confirmDeleteBoard = async () => {
@@ -63,50 +103,101 @@ const BoardList = ({ selectedBoardId, onSelectBoard }) => {
     if (error) return <div className="p-4 text-center text-red-500">{error}</div>;
 
     return (
-        <div className="p-4 md:p-4">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">My Boards</h2>
+        <div className="p-5 h-full flex flex-col">
+            <div className="flex items-center space-x-2 mb-6">
+                <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">My Boards</h2>
+            </div>
 
-            <form onSubmit={handleCreateBoard} className="mb-6 flex">
-                <input
-                    type="text"
-                    placeholder="New Board Name"
-                    className="flex-1 px-4 py-3 md:py-2 border border-gray-300 rounded-l-xl md:rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                    value={newBoardName}
-                    onChange={(e) => setNewBoardName(e.target.value)}
-                    minLength={3}
-                    required
-                />
-                <button
-                    type="submit"
-                    className="bg-indigo-600 text-white px-5 py-3 md:px-3 md:py-2 rounded-r-xl md:rounded-r-md hover:bg-indigo-700 font-bold"
-                >
-                    <FaPlus />
-                </button>
+            <form onSubmit={handleCreateBoard} className="mb-6">
+                <div className="flex shadow-sm rounded-lg overflow-hidden border border-gray-200 focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-purple-500">
+                    <input
+                        type="text"
+                        placeholder="New Board Name"
+                        className="flex-1 px-3 py-2 text-sm text-gray-700 focus:outline-none bg-white"
+                        value={newBoardName}
+                        onChange={(e) => setNewBoardName(e.target.value)}
+                        minLength={3}
+                        required
+                    />
+                    <button
+                        type="submit"
+                        className="bg-purple-600 text-white px-3 py-2 hover:bg-purple-700 transition-colors flex items-center justify-center"
+                    >
+                        <FaPlus size={12} />
+                    </button>
+                </div>
             </form>
 
-            <div className="space-y-3 md:space-y-2">
+            <div className="space-y-1 flex-1 overflow-y-auto">
                 {boards.length === 0 ? (
-                    <p className="text-gray-500 text-sm text-center">No boards yet.</p>
+                    <div className="text-center py-8">
+                        <p className="text-gray-400 text-xs">No boards yet.</p>
+                    </div>
                 ) : (
                     boards.map(board => (
                         <div
                             key={board._id}
-                            onClick={() => onSelectBoard(board._id)}
-                            className={`group flex items-center justify-between p-4 md:p-3 rounded-xl md:rounded-r-lg cursor-pointer transition-all duration-200 ease-in-out shadow-sm md:shadow-none border md:border-0 ${selectedBoardId === board._id
-                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200 md:border-l-4 md:border-indigo-600 md:pl-2'
-                                : 'bg-white md:bg-transparent hover:bg-gray-50 text-gray-700 md:text-gray-600 hover:text-gray-900 border-gray-100 md:border-l-4 md:border-transparent md:pl-3'
+                            onClick={() => {
+                                if (editingBoardId !== board._id) {
+                                    onSelectBoard(board);
+                                }
+                            }}
+                            className={`group flex items-center justify-between px-4 py-3 rounded-r-full cursor-pointer transition-all duration-200 mr-2 ${selectedBoardId === board._id
+                                ? 'bg-purple-50 border-l-4 border-purple-600 text-purple-900 shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50 border-l-4 border-transparent hover:text-gray-900'
                                 }`}
                         >
-                            <span className={`font-medium text-base truncate ${selectedBoardId === board._id ? 'font-bold' : ''}`}>
-                                {board.name}
-                            </span>
-                            <button
-                                onClick={(e) => handleDeleteClick(e, board._id)}
-                                className="opacity-100 md:opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 md:p-1.5 rounded-full hover:bg-red-50 transition-all duration-200"
-                                title="Delete Board"
-                            >
-                                <FaTrash size={14} />
-                            </button>
+                            <div className="flex items-center flex-1 min-w-0">
+                                <span className={`mr-3 ${selectedBoardId === board._id ? 'text-purple-600' : 'text-gray-400'}`}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                    </svg>
+                                </span>
+                                {editingBoardId === board._id ? (
+                                    <div className="flex-1 mr-2 relative">
+                                        <input
+                                            type="text"
+                                            value={editName}
+                                            onChange={handleEditChange}
+                                            onBlur={saveEditing}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') saveEditing();
+                                                if (e.key === 'Escape') cancelEditing();
+                                            }}
+                                            autoFocus
+                                            className={`w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 ${editError ? 'border-red-500 focus:ring-red-200' : 'border-purple-300 focus:ring-purple-200'}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                    </div>
+                                ) : (
+                                    <span className={`text-sm truncate flex-1 ${selectedBoardId === board._id ? 'font-bold' : 'font-medium'}`}>
+                                        {board.name}
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className={`flex items-center space-x-1 ${editingBoardId === board._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-200`}>
+                                {editingBoardId !== board._id && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            startEditing(board);
+                                        }}
+                                        className="text-gray-400 hover:text-purple-600 p-1.5 rounded-full hover:bg-purple-50"
+                                    >
+                                        <FaPen size={10} />
+                                    </button>
+                                )}
+                                <button
+                                    onClick={(e) => handleDeleteClick(e, board._id)}
+                                    className="text-gray-400 hover:text-red-500 p-1.5 rounded-full hover:bg-red-50"
+                                >
+                                    <FaTrash size={10} />
+                                </button>
+                            </div>
                         </div>
                     ))
                 )}

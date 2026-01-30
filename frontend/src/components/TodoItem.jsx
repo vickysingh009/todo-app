@@ -52,93 +52,73 @@ const TodoItem = ({ todo, onUpdate, onDelete }) => {
     });
 
     return (
-        <div className={`bg-white p-4 rounded-xl shadow-sm border border-gray-100 transition-all duration-300 ${todo.status === 'completed' ? 'opacity-60 bg-gray-50' : ''}`}>
-            <div className="flex flex-col md:flex-row md:items-center">
-                {/* Mobile: Top Row (Check + Title) */}
-                <div className="flex items-start md:items-center flex-1">
-                    <button
-                        onClick={toggleStatus}
-                        className={`mt-1 md:mt-0 w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center mr-3 transition-all duration-300 ${todo.status === 'completed'
-                            ? 'bg-indigo-500 border-transparent text-white'
-                            : 'border-gray-300 text-transparent hover:border-indigo-400'
-                            }`}
-                    >
-                        <FaCheck size={12} />
-                    </button>
+        <div className={`group bg-white p-4 rounded-xl shadow-sm border border-transparent hover:shadow-md transition-all duration-200 relative overflow-hidden ${todo.status === 'completed' ? 'bg-gray-50 opacity-75' : 'hover:border-purple-100'}`}>
 
+            {/* Accent Bar - Hidden when completed */}
+            {todo.status !== 'completed' && (
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-purple-500 rounded-l-xl"></div>
+            )}
+
+            <div className="flex items-center pl-3">
+                {/* Checkbox Circle */}
+                <button
+                    onClick={toggleStatus}
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-4 transition-all duration-200 flex-shrink-0 ${todo.status === 'completed'
+                        ? 'bg-purple-500 border-purple-500 text-white'
+                        : 'border-gray-300 text-transparent hover:border-purple-400'
+                        }`}
+                >
+                    <FaCheck size={10} />
+                </button>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
                     {isEditing ? (
-                        <div className="flex-1 w-full">
-                            <form onSubmit={handleEdit} className="flex flex-col space-y-2">
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full px-3 py-2 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 text-gray-800 bg-indigo-50/30"
-                                    autoFocus
-                                />
-                                <textarea
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full px-3 py-2 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 text-sm text-gray-600 bg-indigo-50/30 h-20 resize-none"
-                                />
-                                <div className="flex justify-end space-x-2 pt-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => { setTitle(todo.title); setDescription(todo.description || ''); setIsEditing(false); }}
-                                        className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
-                                    >
-                                        <FaTimes />
-                                    </button>
-                                    <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium text-sm">
-                                        Save
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        <form onSubmit={handleEdit} className="flex flex-col space-y-2">
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="w-full px-3 py-1.5 border border-purple-200 rounded focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-gray-800 bg-purple-50/30 font-medium"
+                                autoFocus
+                            />
+                            <div className="flex justify-end space-x-2">
+                                <button type="submit" className="text-xs bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700">Save</button>
+                                <button type="button" onClick={() => setIsEditing(false)} className="text-xs bg-gray-200 text-gray-600 px-3 py-1 rounded hover:bg-gray-300">Cancel</button>
+                            </div>
+                        </form>
                     ) : (
-                        <div className="flex-1 min-w-0">
-                            <h3
+                        <div className="flex items-center justify-between">
+                            <span
                                 onClick={() => setIsEditing(true)}
-                                className={`font-bold text-gray-900 leading-snug mb-1 cursor-pointer hover:text-indigo-600 transition-colors ${todo.status === 'completed' ? 'line-through text-gray-400' : ''}`}
+                                className={`font-medium text-gray-900 truncate cursor-pointer select-none text-base ${todo.status === 'completed' ? 'text-gray-400 line-through' : ''}`}
                             >
                                 {todo.title}
-                            </h3>
-                            {todo.description && (
-                                <p className="text-sm text-gray-500 line-clamp-2 md:hidden mb-2">
-                                    {todo.description}
-                                </p>
-                            )}
-                            <div className="flex items-center text-xs text-gray-400 md:hidden">
-                                <FaCalendarAlt className="mr-1" size={10} />
-                                {date}
-                            </div>
+                            </span>
                         </div>
                     )}
                 </div>
 
-                {/* Mobile: Bottom Actions / Desktop: Right Actions */}
+                {/* Meta & Actions */}
                 {!isEditing && (
-                    <div className="flex justify-end mt-3 md:mt-0 md:ml-4 border-t border-gray-100 pt-2 md:border-0 md:pt-0">
-                        {/* Desktop Date - Hidden on mobile */}
-                        <span className="hidden md:flex items-center text-xs text-gray-400 mr-4 whitespace-nowrap">
+                    <div className="flex items-center ml-4 space-x-4">
+                        <div className="flex items-center text-xs text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded-md">
                             <FaCalendarAlt className="mr-1.5" size={12} />
-                            {date}
-                        </span>
+                            <span>{date}</span>
+                        </div>
 
-                        <div className="flex space-x-1 opacity-100 transition-opacity">
+                        <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="text-gray-400 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition-colors"
-                                title="Edit Task"
+                                className="p-1.5 text-gray-400 hover:text-purple-600 rounded hover:bg-purple-50 transition-colors"
                             >
-                                <FaEdit size={16} />
+                                <FaEdit size={14} />
                             </button>
                             <button
                                 onClick={() => setShowDeleteModal(true)}
-                                className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors"
-                                title="Delete Task"
+                                className="p-1.5 text-gray-400 hover:text-red-500 rounded hover:bg-red-50 transition-colors"
                             >
-                                <FaTrash size={15} />
+                                <FaTrash size={14} />
                             </button>
                         </div>
                     </div>
