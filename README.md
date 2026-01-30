@@ -2,7 +2,7 @@
 
 > A modern, full-stack task management application with board-based organization and secure authentication
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge)](your-demo-url)
+[![Live Demo]([https://img.shields.io/badge/demo-live-success?style=for-the-badge)](your-demo-url](https://github.com/vickysingh009/todo-app/blob/033f2a45191a90c509c85ce36fbccfd9b44ce4ab/Screenshot%202026-01-30%20135417.png))
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 
 TaskFlow is a production-ready task management system that enables users to organize tasks across multiple boards with Firebase authentication, real-time progress tracking, and a responsive interface. Perfect for personal productivity or team collaboration.
