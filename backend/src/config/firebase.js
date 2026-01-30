@@ -1,24 +1,24 @@
-const admin = require('firebase-admin');
-const path = require('path');
-
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-let serviceAccount;
+const admin = require("firebase-admin");
 
 try {
-    // Check if path is absolute or relative
-    if (path.isAbsolute(serviceAccountPath)) {
-        serviceAccount = require(serviceAccountPath);
-    } else {
-        serviceAccount = require(path.join(process.cwd(), serviceAccountPath));
-    }
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY is missing");
+  }
 
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-    });
-    console.log('Firebase Admin Initialized');
+  const serviceAccount = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT_KEY
+  );
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+
+  console.log("Firebase Admin Initialized");
 } catch (error) {
-    console.warn('Firebase Admin Initialization Failed. Auth will not work until serviceAccountKey.json is provided.');
-    console.error(error.message);
+  console.warn(
+    "Firebase Admin Initialization Failed. Auth will not work."
+  );
+  console.error(error.message);
 }
 
 module.exports = admin;
