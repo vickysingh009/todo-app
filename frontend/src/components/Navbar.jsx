@@ -24,10 +24,12 @@ const Navbar = () => {
                     {/* Logo Area */}
                     <div className="flex items-center space-x-2">
                         <Link to="/" className="flex items-center space-x-2 group">
-                            <div className="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-all duration-300 backdrop-blur-sm">
-                                <FaCheckDouble className="text-xl" />
+                            <div className="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-all duration-300 backdrop-blur-sm shadow-sm ring-1 ring-white/10">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
                             </div>
-                            <span className="text-xl font-bold tracking-wide">To-Do App</span>
+                            <span className="text-xl font-bold tracking-wide text-white drop-shadow-sm">To-Do App</span>
                         </Link>
                     </div>
 
