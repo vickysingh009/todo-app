@@ -36,8 +36,9 @@ TaskFlow is a production-ready task management system that enables users to orga
 ### 📱 Mobile Experience
 
 <p align="center">
+    <img src="https://raw.githubusercontent.com/vickysingh009/todo-app/c7379f63958e6922ec1c89f71c2ad88789488a1c/mobile%20board%20view.png" width="45%" />
   <img src="https://raw.githubusercontent.com/vickysingh009/todo-app/8d7623098707f5e35a4b45419eba6967d8bda6a7/Mobile%20View.png" width="45%" />
-  <img src="https://raw.githubusercontent.com/vickysingh009/todo-app/c7379f63958e6922ec1c89f71c2ad88789488a1c/mobile%20board%20view.png" width="45%" />
+
 </p>
 
 </div>
