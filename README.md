@@ -1,10 +1,8 @@
 # 📋 TaskFlow
 
 > A modern, full-stack task management application with board-based organization and secure authentication
-[![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge)](https://your-demo-url.com)
+[![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge)](your-demo-url)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-
-![App Screenshot](https://raw.githubusercontent.com/vickysingh009/todo-app/033f2a45191a90c509c85ce36fbccfd9b44ce4ab/Screenshot%202026-01-30%20135417.png)
 
 
 TaskFlow is a production-ready task management system that enables users to organize tasks across multiple boards with Firebase authentication, real-time progress tracking, and a responsive interface. Perfect for personal productivity or team collaboration.
@@ -32,7 +30,7 @@ TaskFlow is a production-ready task management system that enables users to orga
 <div align="center">
   
 ### Dashboard View
-![Dashboard with Tasks](docs/demo-dashboard.png)
+![Dashboard with Tasks]([docs/demo-dashboard.png](https://github.com/vickysingh009/todo-app/blob/033f2a45191a90c509c85ce36fbccfd9b44ce4ab/Screenshot%202026-01-30%20135417.png))
 
 ### Mobile Experience
 ![Mobile View](docs/demo-mobile.png)
